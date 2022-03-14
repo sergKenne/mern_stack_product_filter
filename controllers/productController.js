@@ -70,5 +70,22 @@ const getProductController = async (req, res) => {
     }
 }
 
+const getProductByFilter =  async (req, res) => {
+    const filter = req.params.filtering;
+    try {
+        const prods = await Product.aggregate([{
+            $match: {brand: {$in: filter}}
+        }])
 
-module.exports = { postProductController, getProductController };
+        res.status(200).json(prods)
+        
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            msg: 'fail to fetch data',
+        });
+    }
+}
+
+
+module.exports = { postProductController, getProductController, getProductByFilter };

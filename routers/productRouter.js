@@ -1,5 +1,9 @@
 const express = require("express")
-const { postProductController, getProductController } = require("../controllers/postProductController")
+const {
+    postProductController,
+    getProductController,
+    getProductByFilter,
+} = require('../controllers/productController');
 const { check } = require('express-validator/check');
 const uploadFile = require("../uploadFile");
 const router = express.Router()
@@ -27,6 +31,7 @@ router.post(
     postProductController
 );
 
-router.get("/product", getProductController)
+router.get("/product", getProductController);
+router.get('/products/:filtering', getProductByFilter)
 
 module.exports = router

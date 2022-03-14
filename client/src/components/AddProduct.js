@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const AddProduct = () => {
-    const [product, setProduct] = useState({
+   const [product, setProduct] = useState({
         name: '',
         brand: '',
         price: '',
@@ -14,7 +14,6 @@ const AddProduct = () => {
     });
 
     const handleChange = (e) => {
-        console.log(e.target.type);
         setProduct({
             ...product,
             [e.target.name]: e.target.type === 'file' ? e.target.files[0] : e.target.value,
@@ -38,16 +37,16 @@ const AddProduct = () => {
         console.log('product:', product);
         console.log('formData:', formData);
 
-        fetch('http://localhost:6060/api/product', {
+        fetch('/api/product', {
             method: 'POST',
             body: formData,
         })
-        .then((data) => data.json())
-        .then((response) => {
-            console.log('product', response);
-            window.location = '/';
-        })
-        .catch((err) => console.log(err));
+            .then((data) => data.json())
+            .then((response) => {
+                console.log('product', response);
+                window.location = '/';
+            })
+            .catch((err) => console.log(err));
     };
 
     return (
@@ -62,7 +61,7 @@ const AddProduct = () => {
                         <br />
                         <form onSubmit={postProduct} method="post" encType="multipart/form-data">
                             <div className="form-group col-md-6">
-                                <label htmlFor="name">Name</label>
+                                <label className='' htmlFor="name">Name</label>
                                 <input
                                     name="name"
                                     type="text"
@@ -165,7 +164,6 @@ const AddProduct = () => {
                                     name="image"
                                     className="form-control"
                                     id="image"
-                                   
                                     placeholder="Choose image"
                                 />
                             </div>

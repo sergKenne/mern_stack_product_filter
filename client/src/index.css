@@ -74,6 +74,27 @@ html * /* override x.xhtml.ru style */
   padding: 0 8px;
 }
 
+.card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 .card-text {
   margin-bottom: 3px;
+}
+
+.card-text--price {
+  color: #a94442;
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.loading {
+  text-align: center;
+  padding-top: 120px;
+  
 }
