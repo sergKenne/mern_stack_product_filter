@@ -5,12 +5,11 @@ import 'react-input-range/lib/css/index.css';
 
 import {
     productsContext,
-    ADD_PRODUCTS_IN_FILTER_BRAND,
     PRODUCTS_LIST_REQUEST,
     PRODUCTS_SIDEBAR_SUCCESS,
-    REMOVE_PRODUCTS_IN_FILTER_BRAND,
-    ADD_PRODUCTS_IN_FILTER_RAM,
-    REMOVE_PRODUCTS_IN_FILTER_RAM,
+    ADD_PRODUCTS_IN_FILTER,
+    REMOVE_PRODUCTS_IN_FILTER,
+    FILTER_BY_PRICE,
 } from '../context/ContextProvider';
 import axios from 'axios';
 
@@ -21,65 +20,43 @@ const Filter = () => {
 
     const { dispatch } = useContext(productsContext);
     const { productsSidebar } = useContext(productsContext).state;
-    //Array filter for brand
+    //Array filter 
     const [arrFilter, setArrFilter] = useState([]);
-    //Array filter for Ram
-    const [arrRamFilter, setArrRamFilter] = useState([]);
-
     //check input brand
-    const [checkBrand, setCheckBrand] = useState(false);
-    //check input brand
-    const [checkRam, setCheckRam] = useState(false);
-
-    console.log('arrRamFilter:', arrRamFilter);
+    const [check, setCheck] = useState(false);
+    
+    console.log('arrFilter:', arrFilter);
 
     const handleChange = (e) => {
         if (e.target.checked) {
             setArrFilter([...arrFilter, e.target.name]);
-            setCheckBrand(e.target.checked);
+            setCheck(e.target.checked);
         } else {
             setArrFilter(arrFilter.filter((el) => el !== e.target.name));
-            setCheckBrand(e.target.checked);
-        }
-    };
-
-    const handleRamChange = (e) => {
-        if (e.target.checked) {
-            setArrRamFilter([...arrRamFilter, e.target.name]);
-            setCheckRam(e.target.checked);
-        } else {
-            setArrRamFilter(arrRamFilter.filter((el) => el !== e.target.name));
-            setCheckRam(e.target.checked);
+            setCheck(e.target.checked);
         }
     };
 
     useEffect(() => {
-        if (checkBrand) {
-            dispatch({ type: PRODUCTS_LIST_REQUEST });
-            dispatch({ type: ADD_PRODUCTS_IN_FILTER_BRAND, arrFilter });
-        } else {
-            dispatch({ type: PRODUCTS_LIST_REQUEST });
-            dispatch({ type: REMOVE_PRODUCTS_IN_FILTER_BRAND, arrFilter });
-        }
-    }, [arrFilter]);
+        const items = productsSidebar.filter(item => (item.price >= rangeValue.value.min) && (item.price <= rangeValue.value.max)).sort((a,b) => a.price - b.price )
+        dispatch({type: FILTER_BY_PRICE, payload: items})
+    }, [rangeValue]);
 
     useEffect(() => {
-        console.log("test");
-        if (checkRam) {
+        if (check) {
             dispatch({ type: PRODUCTS_LIST_REQUEST });
-            dispatch({ type: ADD_PRODUCTS_IN_FILTER_RAM, arrRamFilter });
+            dispatch({ type: ADD_PRODUCTS_IN_FILTER, arrFilter });
         } else {
             dispatch({ type: PRODUCTS_LIST_REQUEST });
-            dispatch({ type: REMOVE_PRODUCTS_IN_FILTER_RAM, arrRamFilter });
+            dispatch({ type: REMOVE_PRODUCTS_IN_FILTER, arrFilter });
         }
-    }, [arrRamFilter, dispatch]);
+    }, [arrFilter, dispatch]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             dispatch({ type: PRODUCTS_LIST_REQUEST });
             try {
                 const { data } = await axios.get('/api/product');
-                console.log('data', data);
                 dispatch({ type: PRODUCTS_SIDEBAR_SUCCESS, products: data });
             } catch (err) {
                 dispatch({ type: err.message });
@@ -95,7 +72,6 @@ const Filter = () => {
                 <p id="price_show">
                     {rangeValue.value.min} - {rangeValue.value.max}
                 </p>
-                {/* <br /> */}
                 <InputRange
                     maxValue={65000}
                     minValue={0}
@@ -133,7 +109,7 @@ const Filter = () => {
                         <div className="list-group-item checkbox" key={ram}>
                             <label>
                                 <input
-                                    onChange={handleRamChange}
+                                    onChange={handleChange}
                                     name={ram}
                                     type="checkbox"
                                     className="common_selector ram"
@@ -152,7 +128,13 @@ const Filter = () => {
                     .map((storage) => (
                         <div className="list-group-item checkbox" key={storage}>
                             <label>
-                                <input type="checkbox" className="common_selector ram" value="" />{' '}
+                                <input
+                                    onChange={handleChange}
+                                    name={storage}
+                                    type="checkbox"
+                                    className="common_selector ram"
+                                    value=""
+                                />{' '}
                                 {storage} GB
                             </label>
                         </div>

@@ -5,18 +5,15 @@ export const PRODUCTS_LIST_SUCCESS = 'PRODUCTS_LIST_SUCCESS';
 export const PRODUCTS_LIST_FAIL = 'PRODUCTS_LIST_FAIL';
 export const PRODUCTS_LIST_ERROR = 'PRODUCTS_LIST_ERROR';
 export const PRODUCTS_SIDEBAR_SUCCESS = 'PRODUCTS_SIDEBAR_SUCCESS';
-export const ADD_PRODUCTS_IN_FILTER_BRAND = 'ADD_PRODUCTS_IN_FILTER_BRAND';
-export const REMOVE_PRODUCTS_IN_FILTER_BRAND = 'REMOVE_PRODUCTS_IN_FILTER_BRAND';
-export const ADD_PRODUCTS_IN_FILTER_RAM = 'ADD_PRODUCTS_IN_FILTER_RAM';
-export const REMOVE_PRODUCTS_IN_FILTER_RAM = 'REMOVE_PRODUCTS_IN_FILTER_RAM';
+export const ADD_PRODUCTS_IN_FILTER = 'ADD_PRODUCTS_IN_FILTER_BRAND';
+export const REMOVE_PRODUCTS_IN_FILTER = 'REMOVE_PRODUCTS_IN_FILTER_BRAND';
+export const FILTER_BY_PRICE = 'FILTER_BY_PRICE';
 
 const initialState = {
     products: [],
     productsSidebar: [],
     loading: false,
     error: false,
-    arrayFiltering: [],
-    tempFilter: []
 };
 
 const productsReducer = (state = initialState, action) => {
@@ -46,10 +43,21 @@ const productsReducer = (state = initialState, action) => {
                 productsSidebar: action.products,
             };
 
-        case ADD_PRODUCTS_IN_FILTER_BRAND:
+        case ADD_PRODUCTS_IN_FILTER:
             let prodFilter = [];
+
             state.productsSidebar.forEach((el) => {
-                if (action.arrFilter.includes(el.brand)) prodFilter.push(el);
+                // if (action.arrFilter.includes(el.brand)) {
+                //     prodFilter.push(el);
+                // } else if (action.arrFilter.includes(el.ram)) {
+                //     prodFilter.push(el);
+                // } else if (action.arrFilter.includes(el.storage)) {
+                //     prodFilter.push(el);
+                // }
+
+                if (action.arrFilter.includes(el.brand) || action.arrFilter.includes(el.ram) || action.arrFilter.includes(el.storage)) {
+                    prodFilter.push(el);
+                } 
             });
             return {
                 ...state,
@@ -57,10 +65,13 @@ const productsReducer = (state = initialState, action) => {
                 products: prodFilter,
             };
 
-        case REMOVE_PRODUCTS_IN_FILTER_BRAND:
+        case REMOVE_PRODUCTS_IN_FILTER:
             let item = [];
-            state.products.forEach((el) => {
+            state.productsSidebar.forEach((el) => {
                 if (action.arrFilter.includes(el.brand)) item.push(el);
+                if (action.arrFilter.includes(el.ram)) item.push(el);
+                if (action.arrFilter.includes(el.storage)) item.push(el);
+
                 if (action.arrFilter.length === 0) {
                     item = state.productsSidebar;
                 }
@@ -70,32 +81,12 @@ const productsReducer = (state = initialState, action) => {
                 loading: false,
                 products: item,
             };
-
-        case ADD_PRODUCTS_IN_FILTER_RAM:
-            //console.log('sidePro:', state.productsSidebar);
-            let ramFilter = [];
-            state.productsSidebar.forEach((el) => {
-                if (action.arrRamFilter.includes(el.ram)) ramFilter.push(el);
-            });
+        case FILTER_BY_PRICE:
             return {
                 ...state,
                 loading: false,
-                products: ramFilter,
-            };
-        case REMOVE_PRODUCTS_IN_FILTER_RAM:
-            let prod = [];
-            state.products.forEach((el) => {
-                if (action.arrRamFilter.includes(el.ram)) prod.push(el);
-
-                if (action.arrRamFilter.length === 0) {
-                    prod = state.productsSidebar;
-                }
-            });
-            return {
-                ...state,
-                loading: false,
-                products: prod,
-            };
+                products: action.payload
+            }
 
         default:
             return state;

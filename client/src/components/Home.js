@@ -2,8 +2,6 @@ import React from 'react';
 import Filter from './Filter';
 import Products from './Products';
 
-
-
 const Home = () => {
   
     return (
@@ -12,9 +10,7 @@ const Home = () => {
                 <br />
                 <h2 align="center">Product Filters in REACT</h2>
                 <br />
-
                 <Filter />
-
                 <Products/>
             </div>
         </>
