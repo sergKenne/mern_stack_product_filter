@@ -1,8 +1,6 @@
 const Product = require("../models/productModel")
 const { validationResult } = require('express-validator');
 
-
-
 const postProductController = (req, res) => {
     
     const { name, brand, price, ram, storage, camera, quantity } = req.body
@@ -29,18 +27,6 @@ const postProductController = (req, res) => {
     if (!errors.isEmpty()) {
         res.status(400).json({ errors: errors.array() });
     } else {
-        // product.save().then((product) => {
-        //     res.status(201).json({
-        //         success: true,
-        //         msg: "product created successfully ",
-        //         product
-        //     })
-        // }).catch(err => {
-        //     res.status(400).json({
-        //         success: false,
-        //         msg: err.message
-        //     })
-        // })
         Product.create(product, (err, product) => {
         if (err) {
             return res.status(400).json({

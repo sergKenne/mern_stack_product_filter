@@ -83,6 +83,12 @@ html * /* override x.xhtml.ru style */
 
 .card-text {
   margin-bottom: 3px;
+  font-weight: bold;
+}
+
+.card-text span {
+  font-weight: normal;
+  padding-left: 4px;
 }
 
 .card-text--price {
