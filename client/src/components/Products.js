@@ -33,7 +33,7 @@ const Products = () => {
                       <div className="col-md-3 px-2" key={prod._id}>
                           <div className="card">
                               <img
-                                  src={`/uploads/${prod.image}`}
+                                  src={`/${prod.image}`}
                                   className="card-img-top img-max-width "
                                   alt="..."
                               />
