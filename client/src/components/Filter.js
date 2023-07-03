@@ -12,6 +12,7 @@ import {
 } from '../context/ContextProvider';
 import axios from 'axios';
 import { productsFilter } from '../utils/productsFilter';
+import { BASE_URL } from '../utils/base_url';
 
 const Filter = () => {
 
@@ -128,7 +129,8 @@ const Filter = () => {
         const fetchProducts = async () => {
             dispatch({ type: PRODUCTS_LIST_REQUEST });
             try {
-                const { data } = await axios.get('/api/product');
+                //const { data } = await axios.get('/api/product');
+                const { data } = await axios.get(`${BASE_URL}/api/product`); //for deployement
                 console.log(data);
                 dispatch({ type: PRODUCTS_SIDEBAR_SUCCESS, products: data });
                 setData(data)
