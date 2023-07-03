@@ -19,7 +19,7 @@ const Products = () => {
             } 
         }
         fetchProducts()
-    }, [])
+    }, [dispatch])
     
   return (
       <div className="col-md-9">

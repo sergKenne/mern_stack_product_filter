@@ -14,6 +14,18 @@ import axios from 'axios';
 import { productsFilter } from '../utils/productsFilter';
 
 const Filter = () => {
+
+
+
+    
+
+
+
+
+
+
+
+
     
     const [rangeValue, setRangeValue] = useState({
         value: { min: 0, max: 65000 },
