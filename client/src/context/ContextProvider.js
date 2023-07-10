@@ -10,7 +10,7 @@ export const SET_PRODUTS_FILTER = 'SET_PRODUTS_FILTER';
 const initialState = {
     products: [],
     productsSidebar: [],
-    loading: false,
+    loading: true,
     error: false,
 };
 

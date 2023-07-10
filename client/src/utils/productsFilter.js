@@ -8,6 +8,7 @@ export const productsFilter = async (
     PRODUCTS_LIST_SUCCESS,
     PRODUCTS_LIST_REQUEST,
 ) => {
+
     try {
         dispatch({ type: PRODUCTS_LIST_REQUEST });
         //const { data } = await axios.get('/api/product');

@@ -1,27 +1,30 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { productsContext, PRODUCTS_LIST_REQUEST, PRODUCTS_LIST_SUCCESS } from '../context/ContextProvider';
 import axios from 'axios'
-import Loading from './Loading';
 import { BASE_URL } from '../utils/base_url';
+import Loading from './Loading'
 
 const Products = () => {
-    
-    const { products, loading} = useContext(productsContext).state
-    const { dispatch } = useContext(productsContext);
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true)
+    const { products:data} = useContext(productsContext).state
     
     useEffect(() => {
-        const fetchProducts = async () => {
-            dispatch({ type: PRODUCTS_LIST_REQUEST })
-            try {
-                //const { data } = await axios.get('/api/product');
-                const { data } = await axios.get(`${BASE_URL}/api/product`); //for deployement
-                dispatch({ type: PRODUCTS_LIST_SUCCESS, products: data })
-            } catch (err) {
-                dispatch({type: err.message})
-            } 
-        }
-        fetchProducts()
-    }, [dispatch])
+
+        fetch(`${BASE_URL}/api/product`)
+            .then(res => res.json())
+            .then(data => {
+                setProducts(data);
+                setLoading(false)
+            })
+            .catch(err => {
+            console.log(err.message);
+        })
+    }, [])
+
+    useEffect(() => {
+        setProducts(data)
+    },[data])
     
   return (
       <div className="col-md-9">
@@ -30,7 +33,9 @@ const Products = () => {
               <Loading />
           ) : (
               <div className="row filter_data">
-                  {products.length === 0 && <h1> No Data Found</h1>}
+                  {products.length === 0 && (
+                      <h1 style={{ textAlign: 'center' }}> No Product Found</h1>
+                  )}
                   {products.map((prod) => (
                       <div className="col-sm-4 col-md-3 px-2" key={prod._id}>
                           <div className="card">

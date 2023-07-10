@@ -17,7 +17,6 @@ app.use(cors())
 //static Images Folder
 app.use('/uploads', express.static('./uploads'))
 
-
 //ROUTER
 app.use("/api", productRouter)
 

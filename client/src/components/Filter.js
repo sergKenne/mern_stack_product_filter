@@ -15,19 +15,6 @@ import { productsFilter } from '../utils/productsFilter';
 import { BASE_URL } from '../utils/base_url';
 
 const Filter = () => {
-
-
-
-    
-
-
-
-
-
-
-
-
-    
     const [rangeValue, setRangeValue] = useState({
         value: { min: 0, max: 65000 },
     });
@@ -39,44 +26,55 @@ const Filter = () => {
     const [objFilter, setObjFilter] = useState({});
     const [orderFilter, setOrderFilter] = useState([]);
 
-    console.log('objFilter:', objFilter);
-    console.log('orderFilter:', orderFilter);
+    // console.log('storageFilter:', JSON.parse(localStorage.getItem('objFilter')));
 
-    console.log('rangeValue:',  rangeValue.value.min, ":" , rangeValue.value.max);
+    // console.log('objFilter:', objFilter);
+    // console.log('orderFilter:', orderFilter);
+
+    // console.log('rangeValue:',  rangeValue.value.min, ":" , rangeValue.value.max);
    
     const handleChange = async (e) => {
         let category = e.target.dataset.filter;
+        let newObjectFilter = {};
+
         if (e.target.checked) {
             if (objFilter[category]) {
-                setObjFilter({
+
+                newObjectFilter = {
                     ...objFilter,
                     [category]:[...objFilter[category],e.target.name]
-                }); 
+                }; 
+                setObjFilter(newObjectFilter)
             } else {
-                setObjFilter({
+                newObjectFilter = {
                     ...objFilter,
                     [category]: [e.target.name],
-                });
+                };
+                setObjFilter(newObjectFilter);
                 setOrderFilter([...orderFilter, category]);
             }
 
         } else {
             objFilter[category] = objFilter[category].filter((el) => el !== e.target.name);
-            setObjFilter({
+            newObjectFilter = {
                 ...objFilter,
                 [category]: objFilter[category].filter((el) => el !== e.target.name),
-            });
-
+            };
+            setObjFilter(newObjectFilter);
             if (objFilter[category].length < 1) {
                 delete objFilter[category];
-                setObjFilter({
+                newObjectFilter = {
                     ...objFilter,
-                });
+                };
+                setObjFilter(newObjectFilter);
+
                 const ind = orderFilter.indexOf(category);
                 orderFilter.splice(ind, 1);
                 setOrderFilter(orderFilter);
             }
         }
+
+        //localStorage.setItem('objFilter', JSON.stringify(newObjectFilter));
     };
 
     useEffect(() => {
@@ -108,7 +106,6 @@ const Filter = () => {
             orderFilter.splice(ind, 1);
             setOrderFilter(orderFilter);
         }
-
     }, [rangeValue]);
 
     useEffect(() => {
@@ -127,18 +124,20 @@ const Filter = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            dispatch({ type: PRODUCTS_LIST_REQUEST });
+            //dispatch({ type: PRODUCTS_LIST_REQUEST });
             try {
                 //const { data } = await axios.get('/api/product');
                 const { data } = await axios.get(`${BASE_URL}/api/product`); //for deployement
                 console.log(data);
                 dispatch({ type: PRODUCTS_SIDEBAR_SUCCESS, products: data });
                 setData(data)
+                console.log("sidebar data:", data);
             } catch (err) {
                 dispatch({ type: err.message });
             }
         };
         fetchProducts();
+            
     }, []);
 
     return (
